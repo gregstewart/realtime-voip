@@ -1,16 +1,19 @@
 require 'spec_helper'
+require 'yaml'
 
 describe Realtime do
   
   before(:each) do
-    @url = "http://greg-stewarts-computer.realtimevaluation.com.au/"
-    @xml_response = '<?xml version="1.0" ?><hometrack><realtime interfaceversion="2.1" accountid="12352"><valuationresponse orderid="114743"><errors/><valuationresult realtimevalid="8073737" realtimevalauth="NypcJC1SX1wyXzgrMlYmVzZYXVxFUSBLODg9UDZfXEwgCg==" datetime="Feb 23 2011  9:59AM" realtimevaluation="703000" confidencelevel="6.25000000" fsd="0.09000000" valuerangelower="640000" valuerangeupper="767000"><errors/><warnings/><valuationproperty postcode="2204" buildingnumber="87" street="PREMIER ST" suburb="MARRICKVILLE" concataddress="87 PREMIER ST" propertytypeid="3" propertytype="House" htproptypeid="3" addresspointtoid="1350482" asofdate="Feb 22 2011 12:00AM" knownvalue="125000" knownvaluedate="Mar 30 1988 12:00AM" yearbuilt="1930" reference="api_test" x_coord="1239356.040" y_coord="1469259.480" lat="-33.920726080000001" lon="151.153207049999990"/><addressmatching apiused="false" matched="false" foundindatabase="true" inputaddress="87 PREMIER ST MARRICKVILLE 2204"/></valuationresult></valuationresponse></realtime></hometrack>'
+    
 
-    @auto_login = ''
-    @auto_password = ''
-    @account_id = 0
-    @password = ''
-    @xml_request = '<hometrack><realtime accountid="12352"><valuationrequest><property reference="api_test" propertytype="3" streetnum="87" street="PREMIER" streettype="ST" suburb="MARRICKVILLE" postcode="2204" state="NSW"/></valuationrequest></realtime></hometrack>'
+    @url = APP_CONFIG['url']
+    @xml_response = APP_CONFIG['xml_response']
+
+    @auto_login = APP_CONFIG['auto_login']
+    @auto_password = APP_CONFIG['auto_password']
+    @account_id = APP_CONFIG['account_id']
+    @password = APP_CONFIG['password']
+    @xml_request = APP_CONFIG['xml_request']
 
     @attr = { :auto_login => @auto_login,
               :auto_password => @auto_password,
@@ -48,18 +51,18 @@ describe Realtime do
 
   end
 
-  it "should make a new call to realtime" do
-    WebMock.allow_net_connect!
-
-    response = Realtime.new_valuation()
-    response.should == @xml_response
-
-  end
+  #it "should make a new call to realtime" do
+  #  WebMock.allow_net_connect!
+  #
+  #  response = Realtime.new_valuation()
+  #  response.should == @xml_response
+  #
+  #end
 
   it "should retrieve an existing valuation" do
     WebMock.allow_net_connect!
 
-    response = Realtime.fetch(0)
+    response = Realtime.fetch(8073738)
     response.should == @xml_response
   end
 
