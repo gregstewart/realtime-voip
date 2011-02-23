@@ -1,14 +1,18 @@
 class MessagingController < ApplicationController
   def index
-    #initial_text captures the very first sms or IM sent to tropo
-    initial_text = params["session"]["initialText"]
-    from = params["session"]["from"]
-    network = from["network"]
-    from_id = from["id"] # this field contains IM login or phone number in case of incoming SMS
-    if network == "SMS" || network == "JABBER"
-      render :json => parse(initial_text)
+    if params.nil?
+      #initial_text captures the very first sms or IM sent to tropo
+      initial_text = params["session"]["initialText"]
+      from = params["session"]["from"]
+      network = from["network"]
+      from_id = from["id"] # this field contains IM login or phone number in case of incoming SMS
+      if network == "SMS" || network == "JABBER"
+        render :json => parse(initial_text)
+      else
+        render :json => Tropo::Generator.say("Unsupported operation")
+      end
     else
-      render :json => Tropo::Generator.say("Unsupported operation")
+      render :json => {:error => "There was an error"}
     end
   end
 
