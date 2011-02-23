@@ -1,6 +1,6 @@
 class MessagingController < ApplicationController
   def index
-    if params.nil?
+    if !params.nil?
       #initial_text captures the very first sms or IM sent to tropo
       initial_text = params["session"]["initialText"]
       from = params["session"]["from"]
