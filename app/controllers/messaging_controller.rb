@@ -19,9 +19,9 @@ class MessagingController < ApplicationController
                      {:value => "Please enter your zip code to search for volunteer opportunities in your area."}],
                       :choices => { :value => "[5 DIGITS]"}
           # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
-          tropo.on :event => 'hangup', :next => 'hangup'
+          tropo.on :event => 'hangup', :next => 'messaging/hangup'
           # Add an 'on' to the JSON response and set which resource to go when the 'ask' is done executing
-          tropo.on :event => 'continue', :next => 'process_zip'
+          tropo.on :event => 'continue', :next => 'messaging/process_zip'
 
         render :json => tropo.response
       else
