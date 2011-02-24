@@ -5,23 +5,23 @@ class MessagingController < ApplicationController
       initial_text = params["session"]["initialText"]
       from = params["session"]["from"]
       network = from["network"]
+      channel = from["channel"]
       from_id = from["id"] # this field contains IM login or phone number in case of incoming SMS
 
       if network == "SMS" || network == "JABBER"
         render :json => parse(initial_text)
-      else if network == "VOICE"
+      elsif network == "SIP" && channel == "VOICE"
         tropo = Tropo::Generator.new
 
-        tropo.ask :name => 'zip', :bargein => true, :timeout => 60, :attempts => 2,
-                    :say => [{:event => "timeout", :value => "Sorry, I did not hear anything."},
-                   {:event => "nomatch:1 nomatch:2", :value => "Oops, that wasn't a five-digit zip code."},
-                   {:value => "Please enter your zip code to search for volunteer opportunities in your area."}],
-                    :choices => { :value => "[5 DIGITS]"}
-
-        # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
-        tropo.on :event => 'hangup', :next => 'hangup'
-        # Add an 'on' to the JSON response and set which resource to go when the 'ask' is done executing
-        tropo.on :event => 'continue', :next => 'process_zip'
+          tropo.ask :name => 'zip', :bargein => true, :timeout => 60, :attempts => 2,
+                      :say => [{:event => "timeout", :value => "Sorry, I did not hear anything."},
+                     {:event => "nomatch:1 nomatch:2", :value => "Oops, that wasn't a five-digit zip code."},
+                     {:value => "Please enter your zip code to search for volunteer opportunities in your area."}],
+                      :choices => { :value => "[5 DIGITS]"}
+          # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
+          tropo.on :event => 'hangup', :next => 'hangup'
+          # Add an 'on' to the JSON response and set which resource to go when the 'ask' is done executing
+          tropo.on :event => 'continue', :next => 'process_zip'
 
         render :json => tropo.response
       else
