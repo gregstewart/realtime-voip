@@ -1,0 +1,15 @@
+!!! 5
+%html
+  %head
+  %title RealtimeVoip
+  = stylesheet_link_tag :all
+  = stylesheet_link_tag 'phono/kitchen-sink',  :media => 'screen'
+  = csrf_meta_tag
+
+  %body
+
+  = yield
+  %script{:src => "javascripts/phono/log4javascript.js"}
+  %script{:src => "javascripts/jquery-1.5.min.js"}
+  %script{:src => "javascripts/phono/jquery.phono.js"}
+  %script{:src => "javascripts/phono/kitchen-sink.js"}
