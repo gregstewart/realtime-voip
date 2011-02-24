@@ -15,7 +15,7 @@ $(document).ready(function() {
 		var newPhonoDiv = $("#"+newPhonoID);
 
 		phonos[newPhonoID] = $.phono({
-		   apiKey: "C17D167F-09C6-4E4C-A3DD-2025D48BA243",
+		   apiKey: "198749f2661c6e027660b5e43976ac70",
 		   
          onReady: function(event) {
              newPhonoDiv.find(".sessionId").text(this.sessionId);
