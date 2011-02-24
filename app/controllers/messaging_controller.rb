@@ -34,11 +34,11 @@ class MessagingController < ApplicationController
   end
 
   def hangup
-    render :json => Tropo::Generator.puts " Call complete "
+    render :json => Tropo::Generator.puts(" Call complete ")
   end
 
   def process_zip
-    render :json => Tropo::Generator.puts " Process zip "
+    render :json => Tropo::Generator.puts(" Process zip ")
   end
 
   private
