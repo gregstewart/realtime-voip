@@ -8,6 +8,8 @@ class MessagingController < ApplicationController
       from_id = from["id"] # this field contains IM login or phone number in case of incoming SMS
       if network == "SMS" || network == "JABBER"
         render :json => parse(initial_text)
+      else if network == "VOICE"
+        render :json => Tropo::Generator.say("Hello")
       else
         render :json => Tropo::Generator.say("Unsupported operation")
       end
