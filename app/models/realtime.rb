@@ -23,7 +23,7 @@ class Realtime < ActiveRecord::Base
 
   def self.fetch(realtime_id)
 
-    url = URI.parse(Settings.url)
+    uri = URI.parse(Settings.url)
 
 
     post_args = {
@@ -35,9 +35,15 @@ class Realtime < ActiveRecord::Base
       'fuseaction' => 'api.retrievevaluation',
       'realtimeValId' => realtime_id
     }
-    resp, data = Net::HTTP.post_form(url, post_args)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request.set_form_data(post_args)
+    response = http.request(request)
 
-    return parseResponse(data)
+    #resp, data = Net::HTTP.post_form(url, post_args)
+    #http.use_ssl = true
+    return parseResponse(response)
     
   end
 
