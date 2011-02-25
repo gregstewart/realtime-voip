@@ -43,15 +43,15 @@ class MessagingController < ApplicationController
     else
       message = " Uk valuations are currently not supported "
     end
-    tropo.ask :name => 'prompt_for_val_id', :bargein => true, :timeout => 60, :attempts => 2, :allowSignals => "*",
+    tropo.ask :name => 'prompt_for_val_id', :bargein => true, :timeout => 60, :attempts => 2,
                 :say => [{:event => "timeout", :value => " Sorry, I did not hear anything. "},
                {:event => "nomatch:1", :value => "Oops, that wasn't a valid val eye dee. "},
                {:value => message}],
-                :choices => { :value => "[10 DIGITS]"}
+                :choices => {:value => "[DIGITS]", :mode => "dtmf", :terminator => "#"}
     # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
-    tropo.on :event => 'hangup', :next => 'messaging/hangup'
+    tropo.on :event => 'hangup', :next => 'hangup'
     # Add an 'on' to the JSON response and set which resource to go when the 'ask' is done executing
-    tropo.on :event => 'continue', :next => 'messaging/retrieve_val'
+    tropo.on :event => 'continue', :next => 'retrieve_val'
 
     render :json => tropo.response
   end
