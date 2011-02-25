@@ -13,15 +13,16 @@ class MessagingController < ApplicationController
       elsif network == "SIP" && channel == "VOICE"
         tropo = Tropo::Generator.new
 
-          tropo.ask :name => 'zip', :bargein => true, :timeout => 60, :attempts => 2,
-                      :say => [{:event => "timeout", :value => "Sorry, I did not hear anything."},
-                     {:event => "nomatch:1 nomatch:2", :value => "Oops, that wasn't a five-digit zip code."},
-                     {:value => "Please enter your realtime val eye dee"}],
-                      :choices => { :value => "[10 DIGITS]"}
-          # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
-          tropo.on :event => 'hangup', :next => 'messaging/hangup'
-          # Add an 'on' to the JSON response and set which resource to go when the 'ask' is done executing
-          tropo.on :event => 'continue', :next => 'messaging/process_zip'
+        tropo.ask :name => 'greet', :bargein => true, :timeout => 60, :attempts => 2,
+                    :say => [{:event => "timeout", :value => " Sorry, I did not hear anything. "},
+                   {:event => "nomatch:1 nomatch:2", :value => " Oops, that wasn't a valid selection. "},
+                   {:value => " Hello. If you are calling to retrieve an Australian valuation press 1. To retrieve a UK valuation press 2"}],
+                    :choices => { :value => "australia(1, australia), uk(2, uk)"}
+
+        # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
+        tropo.on :event => 'hangup', :next => 'messaging/hangup'
+        # Add an 'on' to the JSON response and set which resource to go when the 'ask' is done executing
+        tropo.on :event => 'continue', :next => 'messaging/prompt_for_val_id'
 
         render :json => tropo.response
       else
@@ -33,12 +34,34 @@ class MessagingController < ApplicationController
     end
   end
 
+  def prompt_for_val_id
+    tropo = Tropo::Generator.new
+
+    
+    if params["result"]["actions"]["value"].to_s == "australia"
+      message = " Please enter your realtime val eye dee followed by the hash key "
+    else
+      message = " Uk valuations are currently not supported "
+    end
+    tropo.ask :name => 'prompt_for_val_id', :bargein => true, :timeout => 60, :attempts => 2, :allowSignals => "*",
+                :say => [{:event => "timeout", :value => " Sorry, I did not hear anything. "},
+               {:event => "nomatch:1", :value => "Oops, that wasn't a valid val eye dee. "},
+               {:value => message}],
+                :choices => { :value => "[10 DIGITS]"}
+    # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
+    tropo.on :event => 'hangup', :next => 'messaging/hangup'
+    # Add an 'on' to the JSON response and set which resource to go when the 'ask' is done executing
+    tropo.on :event => 'continue', :next => 'messaging/retrieve_val'
+
+    render :json => tropo.response
+  end
+
   def hangup
     render :json => Tropo::Generator.say(" Call complete ")
   end
 
-  def process_zip
-    render :json => Tropo::Generator.say(" Process zip ")
+  def retrieve_val
+    render :json => Tropo::Generator.say(" Retrieving valuation ")
   end
 
   private
