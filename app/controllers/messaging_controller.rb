@@ -16,7 +16,7 @@ class MessagingController < ApplicationController
           tropo.ask :name => 'zip', :bargein => true, :timeout => 60, :attempts => 2,
                       :say => [{:event => "timeout", :value => "Sorry, I did not hear anything."},
                      {:event => "nomatch:1 nomatch:2", :value => "Oops, that wasn't a five-digit zip code."},
-                     {:value => "Please enter your zip code to search for volunteer opportunities in your area."}],
+                     {:value => "Please enter your realtime val   id"}],
                       :choices => { :value => "[5 DIGITS]"}
           # Add a 'hangup' to the JSON response and set which resource to go to if a Hangup event occurs on Tropo
           tropo.on :event => 'hangup', :next => 'messaging/hangup'
