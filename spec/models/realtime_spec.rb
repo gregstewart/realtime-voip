@@ -1,19 +1,18 @@
 require 'spec_helper'
-require 'yaml'
 
 describe Realtime do
   
   before(:each) do
     
 
-    @url = APP_CONFIG['url']
-    @xml_response = APP_CONFIG['xml_response']
+    @url = Settings.url
+    @xml_response = Settings.xml_response
 
-    @auto_login = APP_CONFIG['auto_login']
-    @auto_password = APP_CONFIG['auto_password']
-    @account_id = APP_CONFIG['account_id']
-    @password = APP_CONFIG['password']
-    @xml_request = APP_CONFIG['xml_request']
+    @auto_login = Settings.auto_login
+    @auto_password = Settings.auto_password
+    @account_id = Settings.account_id
+    @password = Settings.password
+    @xml_request = Settings.xml_request
 
     @attr = { :auto_login => @auto_login,
               :auto_password => @auto_password,

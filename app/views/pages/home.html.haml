@@ -6,7 +6,6 @@
     .intro
       %h1 The Kitchen Sink
       %p The kitchen sink sample showcases all of the functionality available to you in the Phono SDK. With it, you can create multiple phono instances; each able to make and receive multiple calls and chats. The log viewer, located at the bottom of this sample, monitors client/server events and errors. You can make calls to any Phono session ID, US domestic phone numbers, as well as any <a href="http://www.tropo.com" target="_blank">Tropo</a> or <a target="_blank" href="http://evolution.voxeo.com">Voxeo Evolution</a> application. You can learn more about how to use Phone by visiting the <a href="http://www.phono.com/docs">documentation</a> page and the <a href="http://www.phono.com/forums">forums</a>.
-
 .phonoHldr
   .phono{:style=>"display:none"}
     .phonoHeader
@@ -17,7 +16,7 @@
         %img{:style=>"margin-left:10px;", :align=>"absmiddle", :src=>"images/phono/spinner.gif"}
     .phoneControl
       .inputs
-        %input.callTo.pretty{:type=>"text", :value=>"app:9991484071"}
+        %input.callTo.pretty{:type=>"text", :value=>@app_key}
         %input.call{:type=>"button", :value=>"Call"}
         %span.inputDivider or
         %input.chatTo.pretty{:type=>"text", :value=>"realtime-voip@tropo.im"}
@@ -51,7 +50,7 @@
               %input.btn.digit{:type=>"button", :value=>"9"}
               %input.btn.digit{:type=>"button", :value=>"0"}
               %input.btn.digit{:type=>"button", :value=>"*"}
-              %input.btn.digit{:type=>"button", :value=>"{#}"}
+              %input.btn.digit{:type=>"button", :value=>"#"}
       .chats
         .chatHldr{:style=>"display:none;"}
           .chatHeader

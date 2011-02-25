@@ -80,7 +80,7 @@ a.closePhono, a.closeChat{
 	position:absolute;
 	width:26px;
 	height:26px;
-	background:url("images/phono/close.png") no-repeat;
+	background:url("/images/phono/close.png") no-repeat;
 	top:7px;
 	right:5px;
 }
