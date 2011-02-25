@@ -5,7 +5,7 @@ class Realtime < ActiveRecord::Base
   attr_accessible :auto_login, :auto_password, :account_id, :password, :xml_content
 
   def self.new_valuation
-    url = URI.parse('http://greg-stewarts-computer.realtimevaluation.com.au/')
+    url = URI.parse(Settings.url)
 
 
     post_args = {
@@ -23,7 +23,7 @@ class Realtime < ActiveRecord::Base
 
   def self.fetch(realtime_id)
 
-    url = URI.parse('http://greg-stewarts-computer.realtimevaluation.com.au/')
+    url = URI.parse(Settings.url)
 
 
     post_args = {
@@ -36,8 +36,15 @@ class Realtime < ActiveRecord::Base
       'realtimeValId' => realtime_id
     }
     resp, data = Net::HTTP.post_form(url, post_args)
-    return data
+
+    return parseResponse(data)
     
   end
+
+  def self.parseResponse(xml)
+    result = {:address => "22 smith street", :cl => "6.2", :valuation => "2000000"}
+    return result
+  end
+
 
 end

@@ -61,7 +61,10 @@ class MessagingController < ApplicationController
   end
 
   def retrieve_val
-    render :json => Tropo::Generator.say(" Retrieving valuation ")
+    number_helper = Object.new.extend(ActionView::Helpers::NumberHelper)
+    result = Realtime.fetch(params["result"]["actions"]["value"])
+    logger.debug(result)
+    render :json => Tropo::Generator.say(" Valuation retrieved. Valuation address: #{result[:address].to_s}. Confidence score is #{result[:cl].to_s}. Valuation of #{number_helper.number_to_human(result[:valuation])} dollars")
   end
 
   private
