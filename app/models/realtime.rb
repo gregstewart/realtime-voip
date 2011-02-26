@@ -1,4 +1,5 @@
 require 'net/http'
+require 'net/https'
 
 class Realtime < ActiveRecord::Base
 
@@ -25,7 +26,6 @@ class Realtime < ActiveRecord::Base
 
     uri = URI.parse(Settings.url)
 
-
     post_args = {
       'autologin' => :auto_login,
       'autopassword' => :auto_password,
@@ -35,8 +35,11 @@ class Realtime < ActiveRecord::Base
       'fuseaction' => 'api.retrievevaluation',
       'realtimeValId' => realtime_id
     }
+
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    #http.set_debug_output($stdout)
     request = Net::HTTP::Post.new(uri.request_uri)
     request.set_form_data(post_args)
     response = http.request(request)
