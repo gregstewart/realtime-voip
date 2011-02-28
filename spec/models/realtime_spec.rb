@@ -58,11 +58,43 @@ describe Realtime do
   #
   #end
 
-  it "should retrieve an existing valuation" do
+  it "should connect to the au realtime instance" do
     WebMock.allow_net_connect!
 
     response = Realtime.fetch(8073738)
-    response.should == @xml_response
+    response == Net::HTTPOK
   end
 
+  it "should fail error check" do
+    xml = '<?xml version="1.0" ?>
+				<hometrack>
+					<realtime accountid="-1">
+						<valuationresponse>
+							<errors>
+								<error errorid="3" errormessage="Incorrect Login details supplied"/>
+							</errors>
+		   				</valuationresponse>
+					</realtime>
+				</hometrack>'
+    result = Realtime.has_errors xml
+    result.should be_true
+  end
+
+  it "should pass error check" do
+    result = Realtime.has_errors @xml_response
+    result.should be_false
+  end
+
+  it "should return successfully parse valuation" do
+    result = Realtime.parse_xml @xml_response
+
+    result.should == {:address => "87 PREMIER ST", :cl => "6.25000000", :valuation => "703000"}
+  end
+
+  it "should retrieve an existing valuation through the AU instance" do
+    WebMock.allow_net_connect!
+
+    response = RealtimeAu.get_valuation(8073738)
+    response.should == {:address => "22 smith street", :cl => "6.2", :valuation => "2000000"}
+  end
 end

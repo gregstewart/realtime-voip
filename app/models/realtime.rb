@@ -1,5 +1,7 @@
+require 'nokogiri'
 require 'net/http'
 require 'net/https'
+
 
 class Realtime < ActiveRecord::Base
 
@@ -42,18 +44,26 @@ class Realtime < ActiveRecord::Base
     #http.set_debug_output($stdout)
     request = Net::HTTP::Post.new(uri.request_uri)
     request.set_form_data(post_args)
-    response = http.request(request)
-
-    #resp, data = Net::HTTP.post_form(url, post_args)
-    #http.use_ssl = true
-    return parseResponse(response)
-    
+    response, data = http.request(request)
   end
 
-  def self.parseResponse(xml)
-    result = {:address => "22 smith street", :cl => "6.2", :valuation => "2000000"}
-    return result
+  def self.has_errors(xml)
+    xml = Nokogiri::XML(xml)
+
+    errors = xml.xpath('//errors/error')
+    logger.debug errors.size
+    if errors.size > 0
+      return true
+    end
+
+    return false
   end
 
+  def self.parse_xml(xml)
+    xml_doc = Nokogiri::XML(xml)
+    property_details = xml_doc.xpath('//valuationproperty')
+    valuation_details = xml_doc.xpath('//valuationresult')
 
+    {:address => property_details.first['concataddress'], :cl => valuation_details.first['confidencelevel'], :valuation => valuation_details.first['realtimevaluation']}
+  end
 end
