@@ -6,7 +6,7 @@ class RealtimeAu < Realtime
 
   def self.get_valuation(realtime_id)
     response, data = fetch(realtime_id)
-    logger.debug(data)
+
     if response == Net::HTTPOK
       parse_response(data)
     else
@@ -16,11 +16,11 @@ class RealtimeAu < Realtime
   end
 
   def self.parse_response(xml)
-    outcome = has_errors(xml)
+    outcome, message = has_errors(xml)
     if outcome
       parse_xml xml
     else
-      {:message => "There's been an error"}
+      {:message => message}
     end
 
   end

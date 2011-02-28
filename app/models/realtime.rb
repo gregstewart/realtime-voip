@@ -49,14 +49,16 @@ class Realtime < ActiveRecord::Base
 
   def self.has_errors(xml)
     xml = Nokogiri::XML(xml)
-
     errors = xml.xpath('//errors/error')
-    logger.debug errors.size
+    outcome = false
+    message = 'no errors'
+
     if errors.size > 0
-      return true
+      outcome = true
+      message = errors.first['errormessage']
     end
 
-    return false
+    return outcome, message 
   end
 
   def self.parse_xml(xml)

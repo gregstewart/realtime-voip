@@ -82,7 +82,7 @@ describe Realtime do
 
   it "should pass error check" do
     result = Realtime.has_errors @xml_response
-    result.should be_false
+    result.should == [false, 'no errors']
   end
 
   it "should return successfully parse valuation" do
