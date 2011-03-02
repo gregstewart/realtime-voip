@@ -105,6 +105,7 @@ PLATFORMS
 
 DEPENDENCIES
   haml
+  nokogiri
   rails (= 3.0.1)
   rails_config
   rspec (= 2.5.0)
