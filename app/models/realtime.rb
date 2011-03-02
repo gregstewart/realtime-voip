@@ -12,11 +12,11 @@ class Realtime < ActiveRecord::Base
 
 
     post_args = {
-      'autologin' => :auto_login,
-      'autopassword' => :auto_password,
-      'accountid' => :account_id,
-      'password' => :password,
-      'content' => :xml_content,
+      'autologin' => Settings.auto_login,
+      'autopassword' => Settings.auto_password,
+      'accountid' => Settings.account_id,
+      'password' => Settings.password,
+      'content' => Settings.xml_content,
       'fuseaction' => 'api.interface'
     }
 
@@ -29,14 +29,16 @@ class Realtime < ActiveRecord::Base
     uri = URI.parse(Settings.url)
 
     post_args = {
-      'autologin' => :auto_login,
-      'autopassword' => :auto_password,
-      'accountid' => :account_id,
-      'password' => :password,
-      'content' => :xml_content,
+      'autologin' => Settings.auto_login,
+      'autopassword' => Settings.auto_password,
+      'accountid' => Settings.account_id,
+      'password' => Settings.password,
+      'content' => Settings.xml_content,
       'fuseaction' => 'api.retrievevaluation',
       'realtimeValId' => realtime_id
     }
+
+    logger.debug post_args
 
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -48,24 +50,26 @@ class Realtime < ActiveRecord::Base
   end
 
   def self.has_errors(xml)
-    xml = Nokogiri::XML(xml)
-    errors = xml.xpath('//errors/error')
-    outcome = false
-    message = 'no errors'
+    @xml_doc = Nokogiri::XML(xml)
+    @errors = @xml_doc.xpath('//errors/error')
 
-    if errors.size > 0
-      outcome = true
-      message = errors.first['errormessage']
+    @outcome = false
+    @message = 'no errors'
+
+    if @errors.size > 0
+      @outcome = true
+      @message = @errors.first['errormessage']
     end
 
-    return outcome, message 
+    return @outcome, @message
   end
 
   def self.parse_xml(xml)
-    xml_doc = Nokogiri::XML(xml)
-    property_details = xml_doc.xpath('//valuationproperty')
-    valuation_details = xml_doc.xpath('//valuationresult')
+    @xml_doc = Nokogiri::XML(xml)
+    
+    @property_details = @xml_doc.xpath('//valuationproperty')
+    @valuation_details = @xml_doc.xpath('//valuationresult')
 
-    {:address => property_details.first['concataddress'], :cl => valuation_details.first['confidencelevel'], :valuation => valuation_details.first['realtimevaluation']}
+    {:address => @property_details.first['concataddress'] + ' in ' + @property_details.first['suburb'], :cl => @valuation_details.first['confidencelevel'], :valuation => @valuation_details.first['realtimevaluation']}
   end
 end
