@@ -94,6 +94,7 @@ describe Realtime do
   it "should retrieve an existing valuation through the AU instance" do
     WebMock.allow_net_connect!
     #8131384
+    # live - 8633100
     response = RealtimeAu.get_valuation(8634853)
     response.should == {:address => "87 PREMIER ST in MARRICKVILLE", :cl => "6.25000000", :valuation => "699000"}
   end

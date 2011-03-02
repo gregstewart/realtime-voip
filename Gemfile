@@ -9,6 +9,7 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'haml'
 gem 'tropo-webapi-ruby'
 gem 'rails_config'
+gem 'nokogiri'
 
 # Use unicorn as the web server
 # gem 'unicorn'
