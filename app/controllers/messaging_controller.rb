@@ -11,7 +11,7 @@ class MessagingController < ApplicationController
 
       if network == "SMS" || network == "JABBER"
         render :json => parse(initial_text)
-      elsif network == "SIP" && channel == "VOICE"
+      elsif (network == "SIP" || network == "SKYPE") && channel == "VOICE"
         tropo = Tropo::Generator.new
         tropo.say "Hello."
         tropo.ask :name => 'greet', :bargein => true, :timeout => 60, :attempts => 2,
@@ -63,6 +63,13 @@ class MessagingController < ApplicationController
 
   def hangup
     render :json => Tropo::Generator.say(" Call complete ")
+  end
+
+  def notify_val_being_retrieved
+    tropo = Tropo::Generator.new
+    message = " Thank you, please hold retrieving valuation. "
+    tropo.say( message )
+    tropo.on :event => 'continue', :next => 'retrieve_val'
   end
 
   def retrieve_val
