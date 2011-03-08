@@ -61,8 +61,8 @@ describe Realtime do
   it "should connect to the au realtime instance" do
     WebMock.allow_net_connect!
 
-    @response = Realtime.fetch(8073738)
-    @response.code == 200.to_s
+    response = Realtime.fetch(8073738)
+    response.code == 200.to_s
   end
 
   it "should fail error check" do
@@ -88,7 +88,7 @@ describe Realtime do
   it "should return successfully parse valuation" do
     result = Realtime.parse_xml @xml_response
 
-    result.should == {:address => "87 PREMIER ST", :cl => "6.25000000", :valuation => "703000"}
+    result.should == {:address => "87 PREMIER ST in MARRICKVILLE", :cl => "6.25000000", :valuation => "703000"}
   end
 
   it "should retrieve an existing valuation through the AU instance" do

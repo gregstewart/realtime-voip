@@ -50,26 +50,26 @@ class Realtime < ActiveRecord::Base
   end
 
   def self.has_errors(xml)
-    @xml_doc = Nokogiri::XML(xml)
-    @errors = @xml_doc.xpath('//errors/error')
+    xml_doc = Nokogiri::XML(xml)
+    errors = xml_doc.xpath('//errors/error')
 
-    @outcome = false
-    @message = 'no errors'
+    outcome = false
+    message = 'no errors'
 
-    if @errors.size > 0
-      @outcome = true
-      @message = @errors.first['errormessage']
+    if errors.size > 0
+      outcome = true
+      message = errors.first['errormessage']
     end
 
-    return @outcome, @message
+    return outcome, message
   end
 
   def self.parse_xml(xml)
-    @xml_doc = Nokogiri::XML(xml)
+    xml_doc = Nokogiri::XML(xml)
     
-    @property_details = @xml_doc.xpath('//valuationproperty')
-    @valuation_details = @xml_doc.xpath('//valuationresult')
+    property_details = xml_doc.xpath('//valuationproperty')
+    valuation_details = xml_doc.xpath('//valuationresult')
 
-    {:address => @property_details.first['concataddress'] + ' in ' + @property_details.first['suburb'], :cl => @valuation_details.first['confidencelevel'], :valuation => @valuation_details.first['realtimevaluation']}
+    {:address => property_details.first['concataddress'] + ' in ' + property_details.first['suburb'], :cl => valuation_details.first['confidencelevel'], :valuation => valuation_details.first['realtimevaluation']}
   end
 end
