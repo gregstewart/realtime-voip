@@ -6,8 +6,7 @@ class RealtimeAu < Realtime
 
   def self.get_valuation(realtime_id)
     @response, @data = fetch(realtime_id)
-    logger.debug(@data)
-
+    
     if @response.code == 200.to_s
       parse_response(@data)
     else

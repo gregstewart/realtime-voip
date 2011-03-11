@@ -38,8 +38,6 @@ class Realtime < ActiveRecord::Base
       'realtimeValId' => realtime_id
     }
 
-    logger.debug post_args
-
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
