@@ -77,7 +77,7 @@ class MessagingController < ApplicationController
     result = RealtimeAu.get_valuation(params["result"]["actions"]["value"])
     
     if !result[:message]
-      render :json => Tropo::Generator.say(" Valuation retrieved. Valuation address is #{result[:address].to_s}. Confidence score is #{result[:cl].to_s}. Valuation of #{number_helper.number_to_human(result[:valuation])} dollars")
+      render :json => Tropo::Generator.say(" Valuation retrieved. Valuation address is #{result[:address].to_s}. Confidence score is #{sprintf('%.2f', result[:cl].to_s)}. Valuation of #{number_helper.number_to_human(result[:valuation])} dollars")
     else
       render :json => Tropo::Generator.say(" Sorry, #{result[:message].to_s} ")
     end
