@@ -4,3 +4,5 @@ log/*.log
 tmp/**/*
 .idea/
 config/settings/production.yml
+config/settings/development.yml
+config/settings/test.yml
